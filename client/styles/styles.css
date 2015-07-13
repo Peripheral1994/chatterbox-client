@@ -59,13 +59,13 @@ form input[type=text] {
     padding: 5px;
 }
 
-.chat {
+.chatspace {
     padding: 5px;
     margin-bottom: 5px;
     background-color: #eee;
 }
 
-.chat .username {
+.chatspace .username {
     font-weight: 800;
 }
 
