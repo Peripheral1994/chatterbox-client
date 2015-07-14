@@ -1,3 +1,7 @@
+* {
+    box-sizing: border-box;
+}
+
 body {
     background: #eee;
     text-align: center;
@@ -5,8 +9,8 @@ body {
     font-family: arial, sans-serif;
 }
 
-#main {
-    width: 500px;
+.box {
+    width: 620px;
     margin: auto;
     text-align: left;
     background: white;
@@ -15,32 +19,32 @@ body {
     border-width: 0 1px 1px 1px;
 }
 
-#main h1 {
+.box h1 {
     margin-top: 0;
     font-size: 35px;
     margin-bottom: 5px;
     padding: 5px;
 }
 
-#main h1 span {
+.box h1 span {
     font-style:italic;
 }
 
-#main ul {
+.box ul {
     padding-left: 20px;
 }
 
-#main .error {
+.box .error {
     border: 1px solid red;
     background: #FDEFF0;
     padding: 20px;
 }
 
-#main .success {
+.box .success {
     margin-top: 25px;
 }
 
-#main .success code {
+.box .success code {
     font-size: 12px;
     color: green;
     line-height: 13px;
@@ -69,10 +73,6 @@ form input[type=text] {
     font-weight: 800;
 }
 
-.chat:hover {
-    background-color: #ddd;
-}
-
 .spinner {
     float: right;
     height: 46px;
@@ -81,4 +81,14 @@ form input[type=text] {
 
 .spinner img {
     padding: 10px;
+}
+
+.message {
+    width: 620px;
+    margin: 10px auto;
+    background: white;
+    padding: 20px 10px;
+    border: solid #ddd;
+    border-width: 0 1px 1px 1px;
+    text-align: left;
 }

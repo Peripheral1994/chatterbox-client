@@ -1,17 +1,52 @@
 $(document).ready(function(){
   setInterval( get, 5000 );
   get();
-});
+  $('.roomnames').change(function() {
+    $('.message').hide();
+    selectedRoom = $('select option:selected').attr('value');
+    $('.' + selectedRoom).show();
+  });
+  $('form').submit(function(event) {
+    debugger;
+    event.preventDefault();
+    var text = $(this).find('input[name=message]').val();
+    var username = window.location.search.match(/(&|\?)username=([^&\?]*)/)[2];
+    var msg = new Message({username: username, text: text, roomname: selectedRoom});
+    msg.send();
+  }); 
+;});
 
 
 var messageIds = {};
+var rooms = {};
+var selectedRoom;
+
+var escape = function(string){
+/*
+' is replaced with &apos;
+" is replaced with &quot;
+& is replaced with &amp;
+< is replaced with &lt;
+> is replaced with &gt;
+*/
+  return string ? string.replace(/(&|'|"|<|>| )/, "_") : '';
+};
 
 var Message = function(data){
   var messageData = data;
   this.createdAt = new Date();
-  this.username = data.username;
-  this.text = data.text;
-  this.roomname = data.roomname;
+  this.username = (data.username);
+  this.text = (data.text);
+  this.roomname = (data.roomname);
+  this.$ = $('<div class="message"></div>').addClass(escape(this.roomname)).text(this.text);
+  $('.chatspace').prepend(this.$);
+  if (!rooms[this.roomname]){
+    rooms[this.roomname] = true;
+    $('.roomnames').append($('<option></option>').attr('value', escape(this.roomname)).text(this.roomname));
+  }
+  if (escape(this.roomname) !== selectedRoom) {
+    this.$.hide();
+  }
 };
 
 Message.prototype.send = function(){
@@ -23,16 +58,13 @@ Message.prototype.send = function(){
     contentType: 'application/json',
     success: function (data) {
       _.extend(self, data);
+      messageIds[data.objectId] = true;
       console.log('chatterbox: Message sent');
     },
     error: function (error) {
       console.error(error);
     }
   });
-};
-
-Message.prototype.update = function(){
-  $('.chatspace').prepend($('<div></div>').text(this.text));
 };
 
 var get = function() {
@@ -42,11 +74,9 @@ var get = function() {
     contentType: 'application/json',
     success: function (data) {
       _.each(data.results.reverse(), function(message){
-        var thisMessage = new Message(message);
-        if (!(message.objectId in messageIds)){
-          messagePassed = true;
+        if (!(message.objectId in messageIds) && message.text){
           messageIds[message.objectId] = true;
-          thisMessage.update();
+          new Message(message);
           console.log("Message received.");
         }
       });
