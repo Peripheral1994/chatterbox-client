@@ -6,29 +6,34 @@ $(document).ready(function(){
     selectedRoom = $('select option:selected').attr('value');
     $('.' + selectedRoom).show();
   });
-  $('form').submit(function(event) {
-    debugger;
+  $('.messagebox').submit(function(event) {
     event.preventDefault();
     var text = $(this).find('input[name=message]').val();
     var username = window.location.search.match(/(&|\?)username=([^&\?]*)/)[2];
     var msg = new Message({username: username, text: text, roomname: selectedRoom});
     msg.send();
+    $(this).find('input[name=message]').val('');
   }); 
-;});
+  $('.roomcreate').submit(function(event) {
+    event.preventDefault();
+    var roomName = $(this).find('input[name=createroom]').val();
+    $('.roomnames').append($('<option></option>').attr('value', escape(roomName)).text(roomName));
+    $(this).find('input[name=createroom]').val('');
+    alert("Room created, please select it from the drop-down menu!");
+  });
+  $('.chatspace').on('click', 'span.username', function() {
+    friends[$(this).text()] = true;
+    alert('friend added');
+  });
+});
 
 
 var messageIds = {};
 var rooms = {};
+var friends = {};
 var selectedRoom;
 
 var escape = function(string){
-/*
-' is replaced with &apos;
-" is replaced with &quot;
-& is replaced with &amp;
-< is replaced with &lt;
-> is replaced with &gt;
-*/
   return string ? string.replace(/(&|'|"|<|>| )/, "_") : '';
 };
 
@@ -38,8 +43,17 @@ var Message = function(data){
   this.username = (data.username);
   this.text = (data.text);
   this.roomname = (data.roomname);
-  this.$ = $('<div class="message"></div>').addClass(escape(this.roomname)).text(this.text);
-  $('.chatspace').prepend(this.$);
+  //Need to make username bold.
+  this.$ = $('<div class="message"><span class="username"></span>: <span class="text"></span></div>')
+    .addClass(escape(this.roomname));
+  this.$.find('.username').text(this.username);
+  this.$.find('.text').text(this.text);
+
+  if (friends[this.username]) {
+    this.$.addClass('friend');
+  }
+   
+ $('.chatspace').prepend(this.$);
   if (!rooms[this.roomname]){
     rooms[this.roomname] = true;
     $('.roomnames').append($('<option></option>').attr('value', escape(this.roomname)).text(this.roomname));

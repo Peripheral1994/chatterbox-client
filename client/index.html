@@ -15,9 +15,14 @@
   <body>
     <div class="box">
       <h1>chatterbox</h1>
-      <select class="roomnames"></select>
-      <form>
-        <label for="message">Message</label>
+      <select class="roomnames"><option value="Create or select a room:">Create or select a room:</option></select>
+      <form class="roomcreate">
+        <label for="createroom">Create a room:</label>
+        <input name="createroom" type="text" />
+        <input type="submit" />
+      </form>
+      <form class="messagebox">
+        <label for="message">Message:</label>
         <input name="message" type="text" />
         <input type="submit" />
       </form>
